@@ -1,0 +1,31 @@
+<%- include('partials/header') %>
+
+<div>
+    <h3><%= results[0].title %></h3>
+    <h4><%= results[0].description %></h4>
+
+
+    <% for (const result of results) { %>
+        <% for (const tag of result.tags) { %>
+
+        <a href="/quiz/<%= tag.name %>" class="btn btn-lg btn-block btn-primary text-white"><%= tag.name %></a>
+        <% } %>
+        <% for (const question of result.questions) { %>
+            <div>
+                <div>
+                    <div>
+                        <h3><%= question.question %></h3>
+                    </div>
+                    <div>
+                        <ul>
+                            <li><%= question.anecdote %> 1</li>
+                            <li><%= question.lastname %> <%= question.wiki %></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    <% } %>
+</div>
+
+<%- include('partials/footer') %>

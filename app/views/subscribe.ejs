@@ -1,0 +1,28 @@
+<%- include('partials/header') %>
+
+<form method="POST">
+    <p>
+        <label for="subscribe">Subscribe</label>
+    </p>
+    <p>
+        <label>Prénom</label>
+        <input type="text" name="firstname" placeholder="Prénom" value="">
+    </p>
+    <p>
+        <label>Nom</label>
+        <input type="text" name="lastname" placeholder="Nom" value="">
+    </p>
+    <p>
+        <label>Email</label>
+        <input type="email" name="email" placeholder="Chuck@oclock.io" value="">
+    </p>
+    <p>
+        <label>Password</label>
+        <input type="password" name="password" placeholder="somethingstrong" value="">
+    </p>
+    <p>
+        <button>Valider</button>
+    </p>
+</form>
+
+<%- include('partials/footer') %>
