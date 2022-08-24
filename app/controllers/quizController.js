@@ -1,26 +1,71 @@
-const { Answer, Level, Tag, Quiz, User, Question } = require('../models');
-const { sequelize } = require('../models/answer');
+const { Quiz, Tag } = require('../models');
 
-const quizController = {
-    quizPage: async (req, res) => {
-        const quizId = req.params.id
-        const results = await Quiz.findAll({
-            where: {
-                id: quizId,
-            },
-            include: [{
-                model: Question,
-                as: 'questions',
-                include: {
-                    model: Level,
-                    as: 'level'
-                    }
-                }, 'tags'
-            ],
-        })
-        console.log(results);
-        res.render('quiz', {results, session: req.session.rank})
+const quizzController = {
+
+  quizzPage: async (req, res) => {
+    try {
+      const quizId = parseInt(req.params.id);
+      const quiz = await Quiz.findByPk(quizId,{
+        include: [
+          { association: 'author'},
+          { association: 'questions', include: ['answers', 'level']},
+          { association: 'tags'}
+        ]
+      });
+      if (!res.locals.user) {
+        res.render('quiz', {quiz});
+      } else {
+        res.render('play_quiz', {quiz});
+        // res.json(quiz)
+      }
+
+    } catch (err) {
+      console.trace(err);
+      res.status(500).send(err);
     }
-}
+  },
+  quizzPlay: async (req, res) => {
+    const quizId = parseInt(req.params.id);
+    const goodAnswers = []
+    const quiz = await Quiz.findByPk(quizId,{
+      include: [
+        { association: 'author'},
+        { association: 'questions', include: ['answers', 'level']},
+        { association: 'tags'}
+      ]
+    });
+    quiz.questions.forEach(question => {
+      question.answers.forEach(answer => {
+        if (answer.id == question.answer_id) {
+          goodAnswers.push(answer.id)
+        }
+      })
+    });
+    const answers = [];
+    for (const [key, value] of Object.entries(req.body)) {
+      answers.push(Number(value))
+    }
+    res.render('quiz_solution', {quiz, answers, goodAnswers});
+  },
+  listByTag: async (req, res) => {
+    // plutot que de faire une requete compliquée
+    // on va passer par le tag, et laisser les relations de Sequelize faire le taf !
+    try {
+      const tagId = parseInt(req.params.id);
+      const tag = await Tag.findByPk(tagId,{
+        include: [{
+          association: 'quizzes',
+          include: ['author']
+        }]
+      });
+      const quizzes = tag.quizzes;
+      res.render('index', { quizzes });
+    } catch (err) {
+      console.trace(err);
+      res.status(500).send(err);
+    }
+  }
 
-module.exports = quizController;
+};
+
+module.exports = quizzController;

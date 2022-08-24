@@ -1,64 +1,102 @@
-require("dotenv").config();
+// on charge les env vars
+const dotenv = require('dotenv');
+dotenv.config();
 
-const { Quiz, User, Answer, Level, Question } = require("./app/models");
+const {Answer, Level, Question, Quiz, Tag, User} = require('./app/models');
 
-const test = async () => {
-  /*
-  Level.create({
-    name: "Epic"
-  });
-*/
+/**
+ * Test des relations
+ */
 
-
-
-  /*
-  const levels = await Level.findAll({
-    where: {
-      name: "très difficile"
-    }
-  });
-
-  console.log(levels);
-  */
+  /* User <-> Quiz */
+// User.findAll({
+//   include: ['quiz']
+// }).then( (users) => {
+//   for( let user of users) {
+//     console.log(user.fullname, user.quizzes.length);
+//   }
+// });
 
 
 
-/*
-  // EAGER LOADING  = on recupere tout d'un coup (questios et reponses associées)
+  /* Quiz <-> Question */
+// Quiz.findByPk(1,{
+//   include: ["questions"]
+// }).then( (quiz) => {
+//   console.log(quiz);
+// });
 
-  // puisque j'ai défini un alias "possibleAnswers" pour la relation Question -> Answer
-  // (les relations sont définies dans app/models/index.js)
-  // alors lorsque je demande a l'ORM de me recupérer une question
-  // je peux lui demander de me recupérer aussi (en une seule requete) les reponses associées à cette question
-  // grace à l'option "include: 'nom de la relation'"
-  const question = await Question.findByPk(1, { include: "possibleAnswers" });
-  // puisque j'ai demander à charger la relation possibleAnswers
-  // j'ai le droit d'appler la methode possibleAnswers qui va me recupérer tout les objet answer associés à la question
-  console.log(question.question);
+// Question.findByPk(1, {
+//   include: ["quiz"]
+// }).then( (question) => {
+//   console.log(question);
+// });
 
-  for (const answer of question.possibleAnswers) {
-    console.log(answer.description);
+
+
+
+  /* Question <-> Answer */
+//  Question.findByPk(1,{
+//    include: ["answers", "good_answer"]
+//  }).then( (question) => {
+//    console.log(question.question);
+//    for (let answer of question.answers) {
+//      console.log(answer.description);
+//    }
+//    console.log("la bonne réponse est : "+ question.good_answer.description);
+//  });
+
+// Answer.findByPk(1,{
+//   include: ["question"]
+// }).then( (answer) => {
+//   console.log(answer);
+// });
+
+
+
+  /* Question <-> Level */
+// Question.findByPk(1,{
+//   include: ["level"]
+// }).then( (question) => {
+//   console.log(question);
+// });
+
+// Level.findByPk(1, {
+//   include: ["questions"]
+// }).then( (level) => {
+//   console.log(level);
+//   console.log( `${level.questions.length} questions de niveau ${level.name}`);
+// });
+
+
+  /* Quiz <-> Tag */
+// Quiz.findByPk(1,{
+//   include: ["tags"]
+// }).then( (quiz) => {
+//   console.log(quiz);
+//   let tagNames = quiz.tags.map( x=> x.name).join(',');
+//   console.log( `${quiz.title} est assiocié au tags : ${tagNames}` );
+// });
+
+// Tag.findByPk(1,{
+//   include: ["quiz"]
+// }).then( (tag) => {
+//   console.log(tag);
+//   console.log( `le Tag ${tag.name} est associé à ${tag.quiz.length} Quizes`);
+// });
+
+
+  /* Tag -> Question -> User */
+Tag.findByPk(1,{
+  include: [{
+    association: "quiz",
+    include: ["author"]
+  }]
+}).then( (tag) => {
+  let message = '';
+  for (let quiz of tag.quizzes) {
+    message += `${quiz.title}, écrit par ${quiz.author.fullname}\n`;
   }
 
-  // LAZY LOADING : tu recupere seuelement si t'en a vraiment besoin
-  // Moins performant car plus de requetes
-
-  // je ne demande pas a recuprer la relation possibleAnswers en meme temps que la question
-  const question2 = await Question.findByPk(2);
-  console.log(question2.question);
-
-  // pour récupérer les reponsesPossibles je peut utiliser la methode get[nom de la relation]()
-  const answers = await question2.getPossibleAnswers();
-  for (const answer of answers) {
-    console.log(answer.description);
-  }
-
-  */
-
-
-  /*
-  La solution de l'atelier n'est plus là 😊
-  */
-
-};
-test();
+  console.log( `${tag.name} concerne : \n`+message );
+});

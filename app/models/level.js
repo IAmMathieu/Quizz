@@ -1,33 +1,23 @@
-const { Model, DataTypes } = require("sequelize");
-// on recupère l'objet sequelize qui permet de communiquer avec la BDD
-const sequelize = require("../sequelize");
+// On récupère sequelize, ainsi que le connecteur (qui sera donc toujours le meme pour tous les modèles - merci require !)
+const Sequelize = require('sequelize');
+const sequelize = require('../database');
 
-// Avec sequelize un model c'est juste une classe qui hérite de la classe Model de sequelize
-class Level extends Model {}
-// L'orm a besoin de quelques info pour bien manipuler ce model
-// on va les lui fournir avec la methode init
-Level.init(
-  {
-    // premiere info a fournir : quel sont les champs de ce model
-    // et pour chaque champs on preciste son nom, son type et d'autre info optionnelles comme par emxeple est ce qu'il peut etre vide (notNull ?)
-    name: {
-      // pour ce champs "name" on indique à l'ORM que dans le BDD ce sera un champs de type TEXT
-      type: DataTypes.TEXT,
-      // on indique a l'ORM que dans la BDD ce sera un champs NOT NULL
-      allowNull: false,
-      // Ici on dit à l'ORM que AVANT d'esssayer d'enregistrer en BDD les valeurs on fait quelque verifications
-      validate: {
-        // et on verifie aussi qu'elle contient au moin un caractère
-        notEmpty: true, // !== ""
-      },
-    },
-  },
-  {
-    // on fourni a notre model l'objet sequelize qui lui permettra de communiquer avec la BDD
-    sequelize,
-    // je fourni a l'ORM le nom de la table qui est en BDD
-    tableName: "level",
-  }
-);
+// Maintenant, nos modèles héritent du "Model" de sequelize, et non plus de notre CoreModel.
+class Level extends Sequelize.Model {};
 
+/**
+ * Nécessaire, requis par Sequelize
+ */
+Level.init({
+  // Premier paramètre : un objet qui définit le type des champs
+  // Remaque : en cas de relation, on ne définit pas les champs "machin_id" !
+  //   ils seront définis implicitement lorsqu'on définira nos relations
+  name: Sequelize.STRING
+},{
+  // le 2ème paramètre contient les options de connections
+  sequelize, // le connecteur
+  tableName: "level", // nom de la table
+});
+
+// on exporte la class directement !
 module.exports = Level;

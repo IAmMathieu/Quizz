@@ -1,21 +1,13 @@
-const { Model, DataTypes } = require("sequelize");
-const sequelize = require("../sequelize");
+const Sequelize = require('sequelize');
+const sequelize = require('../database');
 
-class Answer extends Model {}
-Answer.init(
-  {
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
-    },
-  },
-  {
-    sequelize,
-    tableName: "answer",
-  }
-);
+class Answer extends Sequelize.Model {};
+
+Answer.init({
+  description: Sequelize.STRING
+},{
+  sequelize,
+  tableName: "answer"
+});
 
 module.exports = Answer;

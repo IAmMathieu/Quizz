@@ -1,50 +1,24 @@
-const { DataTypes, Model } = require("sequelize");
-const sequelize = require("../sequelize");
+const Sequelize = require('sequelize');
+const sequelize = require('../database');
 
-class User extends Model {
-  // on crée une classe donc on peut mettre les méthodes qu'on veut 
-  // donc c'est un avantage par rapport au sequelize.define(...)
+class User extends Sequelize.Model {
+
   get fullname() {
-    return `${this.firstname} ${this.lastname}`;
-  }
-}
-User.init(
-  {
-    email: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-      unique: true,
-      validate: {
-        notEmpty: true,
-        isEmail: true,
-      },
-    },
-    password: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
-    },
-    firstname: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
-    },
-    lastname: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
-    },
-  },
-  {
-    sequelize,
-    tableName: "user",
-  }
-);
+    return this.firstname + ' ' + this.lastname;
+  };
+
+};
+
+User.init({
+  email: Sequelize.STRING,
+  role: Sequelize.STRING,
+  password: Sequelize.STRING,
+  firstname: Sequelize.STRING,
+  lastname: Sequelize.STRING
+}, {
+  sequelize,
+  tableName: "user"
+});
+
 
 module.exports = User;

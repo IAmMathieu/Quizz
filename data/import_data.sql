@@ -740,8 +740,8 @@ INSERT INTO "answer" ("id", "description", "question_id") VALUES
 --
 
 INSERT INTO "user" ("id", "firstname", "lastname", "email", "password") VALUES
-(1, 'Philippe', 'Candille', 'philippe@oclock.io', '$2b$10$7vwYGrz2TGeyG4X8YnD9BOag9I.YKGUTJELs64qGmcK/syHu2BzTG'),
-(3, 'Chuck', 'Norris', 'chuck@oclock.io', '$2b$10$7vwYGrz2TGeyG4X8YnD9BOag9I.YKGUTJELs64qGmcK/syHu2BzTG');
+(1, 'Philippe', 'Candille', 'philippe@oclock.io', '$2y$10$7vwYGrz2TGeyG4X8YnD9BOag9I.YKGUTJELs64qGmcK/syHu2BzTG'),
+(3, 'Chuck', 'Norris', 'chuck@oclock.io', '$2y$10$7vwYGrz2TGeyG4X8YnD9BOag9I.YKGUTJELs64qGmcK/syHu2BzTG');
 
 --
 -- Déchargement des données de la table "levels"
@@ -1021,16 +1021,14 @@ COMMIT;
 BEGIN;
 
 --
--- Postgres avec le fait d'ajouter IDENTITY BY DEFAULT au lieu de ALWAYS ne met pas à jour le curseur de l'incrément de la séquence de façon implicite !
+-- PostGres avec le type serial n'incrémente pas automatiquement de façon implicite la séquence rattaché à la colonne !
 -- Il faut donc mettre à jour la valeur courante de chacune des séquences en séléctionnant l'id maximum de chaque table
 --
-
 SELECT setval('level_id_seq', (SELECT MAX(id) from "level"));
 SELECT setval('answer_id_seq', (SELECT MAX(id) from "answer"));
 SELECT setval('user_id_seq', (SELECT MAX(id) from "user"));
 SELECT setval('question_id_seq', (SELECT MAX(id) from "question"));
 SELECT setval('quiz_id_seq', (SELECT MAX(id) from "quiz"));
 SELECT setval('tag_id_seq', (SELECT MAX(id) from "tag"));
-
 
 COMMIT;

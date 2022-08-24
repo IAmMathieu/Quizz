@@ -1,4 +1,4 @@
-<%- include('partials/header') %>
+<%- include('partials/header') -%>
 
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
     <h2 class="h1 display-4"><%= quiz.title %></h2>
@@ -21,8 +21,9 @@
 
 <div class="row">
 
+    <% let i = 0 %>
+    <% let score = 0 %>
     <% for(let question of quiz.questions) { %>
-
     <div class="col-12">
         <label class="badge level level--<%= question.level.name.toLowerCase() %>"><%= question.level.name %></label>
         <h4>
@@ -30,14 +31,25 @@
         </h4>
         <ul>
             <% for(let index in question.answers){ %>
-            <li><%= parseInt(index) + 1 %>. <%= question.answers[index].description %></li>
+                 <% if (Number(question.answers[index].id) === answers[i]) { %>
+                    <% if (answers[i] === goodAnswers[i]) { %>
+                        <% score++ %>
+                        <li style="background-color: green;"><%= parseInt(index) + 1 %>. <%= question.answers[index].description %></li>
+                    <% } else if (answers[i] !== goodAnswers[i]) { %>
+                        <li style="background-color: red;"><%= parseInt(index) + 1 %>. <%= question.answers[index].description %></li>
+                    <% } %>
+                <% } else if (Number(question.answers[index].id) != answers[i]) { %>
+                    <li><%= parseInt(index) + 1 %>. <%= question.answers[index].description %></li>
+                <% } %>
             <% } %>
+        <% i++ %>
         </ul>
     </div>
-
-
+    
+    
     <% } %>
-
+    
 </div>
+<h2> Votre Score: <%= score %></h2>
 
-<%- include('partials/footer') %>
+<%- include('partials/footer') -%>

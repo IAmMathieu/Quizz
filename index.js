@@ -1,29 +1,41 @@
-require('dotenv').config();
+// Premier reflexe : les variables d'environnement !
+const dotenv = require('dotenv');
+dotenv.config();
+const PORT = process.env.PORT || 5050;
 
-const path = require('path');
+// et c'est parti pour Express !
 const express = require('express');
-const session = require('express-session');
-const router = require('./app/routers');
-
-const port = process.env.PORT || 3000;
 
 const app = express();
 
+// réglages views
+app.set('views', 'app/views');
+app.set('view engine', 'ejs');
+
+
+// les statiques
+app.use(express.static('public'));
+
+// on rajoute la gestion des POST body
+app.use(express.urlencoded({extended: true}));
+
+// et on rajoute la gestion des sessions
+const session = require('express-session');
 app.use(session({
-   secret: process.env.SECRET,
-   resave: true,
-   saveUninitialized: true,
-   cookie: { secure: false, maxAge: 3600000} // 1000ms x 60s x 60min = 1h
+  saveUninitialized: true,
+  resave: true,
+  secret: 'Un Super Secret'
 }));
 
-app.set('view engine', 'ejs');
-app.set('views', './app/views');
+// et hop, notre middleware magique
+const userMiddleware = require('./app/middlewares/user');
+app.use(userMiddleware);
 
-app.use(express.static(path.join(__dirname, './assets')))
-app.use(express.urlencoded({ extended: true }));
-
+// le routage
+const router = require('./app/router');
 app.use(router);
 
-app.listen(port, _ => {
-   console.log(`http://localhost:${port}`);
+// lancement du serveur
+app.listen( PORT,  () => {
+  console.log(`Listening on http://localhost:${PORT}`);
 });

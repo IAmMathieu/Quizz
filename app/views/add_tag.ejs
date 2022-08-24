@@ -1,0 +1,28 @@
+<%- include('partials/header') %>
+
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+  <h2 class="h1 display-4">Se connecter sur O'Quiz</h2>
+  <p class="lead">Une application sympa pour répondre à des questions cool.</p>
+</div>
+
+<% if(locals.error) { %>
+  <div class="row">
+    <div class="error">
+      <%= error %>
+    </div>
+  </div>
+<% } %>
+
+<div class="row">
+  <div class="col-6 offset-3">
+    <form action="" method="POST" class="form-signup">
+
+      <div class="form-label-group">
+        <input type="text" class="form-control" id="tag" name="tag" placeholder="Saisir un sujet<">
+        <label for="tag">Saisir un sujet</label>
+      </div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Valider</button>
+    </form>
+  </div>
+</div>
+<%- include('partials/footer') %>

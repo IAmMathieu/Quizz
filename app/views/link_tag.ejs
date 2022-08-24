@@ -1,0 +1,39 @@
+<%- include('partials/header') %>
+
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+  <h2 class="h1 display-4">Se connecter sur O'Quiz</h2>
+  <p class="lead">Une application sympa pour répondre à des questions cool.</p>
+</div>
+
+<% if(locals.error) { %>
+  <div class="row">
+    <div class="error">
+      <%= error %>
+    </div>
+  </div>
+<% } %>
+
+<div class="row">
+  <div class="col-6 offset-3">
+    <form action="" method="POST" class="form-edittag">
+      <label for="tag-select">Selectionnez un sujet:</label>
+        <select name="tag" id="tag-select">
+            <option value="">--Please choose an option--</option>
+            <% for (const tag of tags) { %>
+              <option value="<%= tag.name %>"><%= tag.name %></option>
+            <% } %>
+        </select>
+        <label for="tag-select">Selectionnez un quiz:</label>
+        <select name="quiz" id="quiz-select">
+          <option value="">--Please choose an option--</option>
+          <% for (const quiz of quizzes) { %>
+            <option value="<%= quiz.title %>"><%= quiz.title %></option>
+          <% } %>
+      </select>
+      </div>
+      
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Et dans les ténèbres les lier</button>
+    </form>
+  </div>
+</div>
+<%- include('partials/footer') %>
